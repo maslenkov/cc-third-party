@@ -1,0 +1,14 @@
+{
+  "name": "third-party",
+  "description": "Local tools for installing and security-auditing third-party plugins, skill sets, and modules in Claude Code",
+  "owner": {
+    "name": "Maslenkov"
+  },
+  "plugins": [
+    {
+      "name": "third-party",
+      "source": "./",
+      "description": "Tools for installing and security-auditing plugins, skill sets, and modules from local sources"
+    }
+  ]
+}

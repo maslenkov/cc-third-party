@@ -1,0 +1,4 @@
+{
+  "name": "third-party",
+  "description": "Tools for installing and security-auditing third-party plugins, skill sets, and modules in Claude Code from local sources"
+}
