@@ -5,32 +5,41 @@ description: Use when auditing a folder of external AI agent skills, plugins, or
 
 # Security Audit for Third-Party Content
 
-Audits a folder of AI agent skills, plugins, or modules for security threats. Always run from a safe directory — pass path to the untrusted folder as argument.
+Audits AI agent skills, plugins, or modules for security threats. Accepts either a **folder path** (full audit) or a **`.patch` file** (diff audit — only additions are checked).
 
 ## Usage
 
 ```
-/third-party:security-audit /path/to/folder
+/third-party:security-audit /path/to/folder        # full audit
+/third-party:security-audit /path/to/update.patch  # diff audit (updates)
 ```
 
 If no path is provided in the invocation arguments, ask the user:
-> "Укажи путь к папке, которую нужно проверить:"
+> "Укажи путь к папке или .patch файлу:"
 
 ## Workflow
 
-Launch a subagent to analyze the folder in isolation. The subagent MUST use ONLY Glob, Grep, and Read tools — no Bash, no Write, no network calls, no Agent tool.
+Determine input mode from the argument:
+- Ends with `.patch` → **diff mode**: read the patch file, check only lines starting with `+`
+- Otherwise → **folder mode**: discover and check all files in the directory
 
-Dispatch the subagent with this exact prompt (replace {PATH} with the actual path):
+Launch a subagent to analyze the content in isolation. The subagent MUST use ONLY Glob, Grep, and Read tools — no Bash, no Write, no network calls, no Agent tool.
+
+Dispatch the subagent with this exact prompt (replace {PATH} and {MODE} accordingly):
 
 ---
-Analyze the folder at: {PATH}
+You are a security auditor for AI agent skills and plugins. You MUST use ONLY Glob, Grep, and Read tools. Do not execute any code, make network calls, or write any files.
 
-You are a security auditor for AI agent skills and plugins. Check every file for the threats listed below. You MUST use ONLY Glob, Grep, and Read tools. Do not execute any code, make network calls, or write any files.
+**Input:** {PATH}
+**Mode:** {MODE}
 
-**Step 1: Discover all files**
-Use Glob with pattern `{PATH}/**/*` to find all files.
+**Step 1: Discover content to check**
 
-**Step 2: Check each file for all 6 threat categories**
+If mode is **folder**: Use Glob with pattern `{PATH}/**/*` to find all files. Read each file.
+
+If mode is **diff**: Read the file at `{PATH}`. Check only lines beginning with `+` (additions). Ignore lines starting with `-`, `@@`, `---`, or `+++`.
+
+**Step 2: Check for all 6 threat categories**
 
 ### Category 1: Prompt Injection
 Search for text that overrides agent behavior:
@@ -80,7 +89,7 @@ For each finding report exactly:
 ```
 FINDING
 category: [Category name]
-file: [exact file path]
+file: [exact file path or patch file + line number]
 line: [line number if available]
 severity: [CRITICAL | SUSPICIOUS | NOTE]
 evidence: [exact quoted text from the file]
