@@ -17,25 +17,22 @@ Two skills for safely bringing external plugins and skill sets into Claude Code 
 
 ```sh
 git clone <repo-url>
+cd cc-third-party
 ```
 
-### 2. Register as a marketplace
+### 2. Register as a marketplace and install
 
 In a Claude Code session, run:
 
 ```
-/plugin marketplace add /path/to/third-party-plugin
-```
-
-### 3. Install the plugin
-
-```
+/plugin marketplace add /path/to/cc-third-party
 /plugin install third-party@third-party
+/reload-plugins
 ```
 
-### 4. Verify
+### 3. Verify
 
-Type `/third-party:` — you should see `install` and `security-audit` in the autocomplete.
+Type `/third-party:` — you should see `install`, `security-audit`, `security-audit-code`, and `update` in the autocomplete.
 
 > **Note:** If you skip `/plugin install` and manually edit `settings.json` instead, the skills load but tab-completion will not work. Always use `/plugin install`.
 

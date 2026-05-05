@@ -1,0 +1,5 @@
+{
+  "name": "third-party",
+  "description": "Tools for installing and security-auditing plugins, skill sets, and modules from local sources",
+  "version": "1.0.0"
+}
